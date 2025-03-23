@@ -34,14 +34,14 @@ INSERT INTO strings (id, message_id, mode, data) VALUES (1, 0, 'STANDARD_HOLD', 
 pub fn db_init(settings: &config::Config) ->Client{
     let negotiator = NativeTls::new().unwrap();
     let mut con = Client::connect(
-                settings.get_string("dbstring").unwrap(),
+                &settings.get_string("dbstring").unwrap(),
                 TlsMode::Require(&negotiator)
     ).unwrap();
 
     let mut init = true;
-    init = init && check_or_create_db(&con, "messages", SQL_CREATE_MESSAGE);
-    init = init && check_or_create_db(&con, "schedule", SQL_CREATE_SCHEDULE);
-    init = init && check_or_create_db(&con, "strings", SQL_CREATE_STRING);
+    init = init && check_or_create_db(&mut con, "messages", SQL_CREATE_MESSAGE);
+    init = init && check_or_create_db(&mut con, "schedule", SQL_CREATE_SCHEDULE);
+    init = init && check_or_create_db(&mut con, "strings", SQL_CREATE_STRING);
 
     // If we're doing a clean init add some default values!
     if init {
@@ -50,7 +50,7 @@ pub fn db_init(settings: &config::Config) ->Client{
     return con;
 }
 
-fn check_or_create_db(con: &Client, name: &str, sql: &str) -> bool {
+fn check_or_create_db(con: &mut Client, name: &str, sql: &str) -> bool {
 
     let exists: bool = con.execute("SELECT 1::integer FROM pg_tables
             WHERE schemaname = 'public' AND tablename = $1::text;",
@@ -58,7 +58,7 @@ fn check_or_create_db(con: &Client, name: &str, sql: &str) -> bool {
 
     // Create the table!
     if !exists {
-        con.execute(&sql, &[]).unwrap();
+        con.execute(sql, &[]).unwrap();
     }
 
     // Return true if we created the table!
@@ -66,7 +66,7 @@ fn check_or_create_db(con: &Client, name: &str, sql: &str) -> bool {
 }
 
 // TODO move this into a single request utilizing the schedule and foreign keys
-pub fn retrieve_strings_for_message_id(con: &Client, id: i32) -> Vec<(String, String)> {
+pub fn retrieve_strings_for_message_id(con: &mut Client, id: i32) -> Vec<(String, String)> {
 
     let mut str_list: Vec<(String, String)> = Vec::new();
 

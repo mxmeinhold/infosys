@@ -22,7 +22,7 @@ use std::io::Write;
 
 fn main() {
     let settings = Config::builder().add_source(config::File::with_name("settings")).build().unwrap();
-    let con = db_init(&settings);
+    let mut con = db_init(&settings);
     let now = get_naivetime_now();
 
     let mut sign_input: Vec<(Vec<u8>, Vec<u8>)> = Vec::new();
@@ -34,7 +34,7 @@ fn main() {
         DESC LIMIT 1",
     &[&now]).unwrap() {
         let rowid: i32 = row.get(0);
-        let result: Vec<(String, String)> = retrieve_strings_for_message_id(&con, rowid);
+        let result: Vec<(String, String)> = retrieve_strings_for_message_id(&mut con, rowid);
         println!("Message Id: {}, Contents:{:?}", rowid, result);
         for res in result {
             sign_input.push(tuple_to_bytestring(res));
