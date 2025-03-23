@@ -1,7 +1,7 @@
 extern crate config;
 extern crate postgres;
 
-use self::postgres::Connection;
+use self::postgres::Client;
 use self::postgres::TlsMode;
 use self::postgres::tls::native_tls::NativeTls;
 
@@ -31,10 +31,10 @@ INSERT INTO schedule (timeslot, message_id) VALUES ('00:00:00', 0);
 
 INSERT INTO strings (id, message_id, mode, data) VALUES (1, 0, 'STANDARD_HOLD', 'Welcome to CSH!');";
 
-pub fn db_init(settings: &config::Config) ->Connection{
+pub fn db_init(settings: &config::Config) ->Client{
     let negotiator = NativeTls::new().unwrap();
-    let con = Connection::connect(
-                settings.get_str("dbstring").unwrap(),
+    let mut con = Client::connect(
+                settings.get_string("dbstring").unwrap(),
                 TlsMode::Require(&negotiator)
     ).unwrap();
 
@@ -50,7 +50,7 @@ pub fn db_init(settings: &config::Config) ->Connection{
     return con;
 }
 
-fn check_or_create_db(con: &Connection, name: &str, sql: &str) -> bool {
+fn check_or_create_db(con: &Client, name: &str, sql: &str) -> bool {
 
     let exists: bool = con.execute("SELECT 1::integer FROM pg_tables
             WHERE schemaname = 'public' AND tablename = $1::text;",
@@ -66,7 +66,7 @@ fn check_or_create_db(con: &Connection, name: &str, sql: &str) -> bool {
 }
 
 // TODO move this into a single request utilizing the schedule and foreign keys
-pub fn retrieve_strings_for_message_id(con: &Connection, id: i32) -> Vec<(String, String)> {
+pub fn retrieve_strings_for_message_id(con: &Client, id: i32) -> Vec<(String, String)> {
 
     let mut str_list: Vec<(String, String)> = Vec::new();
 

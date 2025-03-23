@@ -4,6 +4,8 @@ mod util;
 
 extern crate config;
 
+use config::Config;
+
 use db::db_init;
 use db::retrieve_strings_for_message_id;
 
@@ -16,10 +18,10 @@ use bb::END_PACKET;
 
 use std::fs::File;
 use std::io::Write;
-use std::error::Error;
+//use std::error::Error;
 
 fn main() {
-    let settings = config::Config::default().merge(config::File::with_name("settings")).unwrap();
+    let settings = Config::builder().add_source(config::File::with_name("settings")).build().unwrap();
     let con = db_init(&settings);
     let now = get_naivetime_now();
 
@@ -41,8 +43,8 @@ fn main() {
 
 
     // Get this shit out onto the sign
-    let mut file = match File::create(settings.get_str("sign_path").unwrap()) {
-        Err(why) => panic!("couldn't create : {}\nDo you not have permissions?", why.description()),
+    let mut file = match File::create(settings.get_string("sign_path").unwrap()) {
+        Err(why) => panic!("couldn't create : {}\nDo you not have permissions?", why),
         Ok(file) => file,
     };
 

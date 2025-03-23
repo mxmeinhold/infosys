@@ -2,16 +2,16 @@ extern crate chrono;
 
 use bb::*;
 
-use self::chrono::naive::time::NaiveTime;
+use self::chrono::NaiveTime;
 use self::chrono::Timelike;
 
 pub fn get_naivetime_now() -> NaiveTime {
     let curtime = chrono::prelude::Local::now();
 
-    return NaiveTime::from_hms(
+    return NaiveTime::from_hms_opt(
         curtime.hour(),
         curtime.minute(),
-        curtime.second());
+        curtime.second()).expect("have a real time");
 }
 
 
