@@ -1,9 +1,11 @@
 extern crate config;
 extern crate postgres;
+extern crate postgres_native_tls;
+extern crate native_tls;
 
 use self::postgres::Client;
-use self::postgres::TlsMode;
-use self::postgres::tls::native_tls::NativeTls;
+use self::native_tls::{TlsConnector};
+use self::postgres_native_tls::MakeTlsConnector;
 
 static SQL_CREATE_SCHEDULE: &'static str = "CREATE TABLE schedule (
     timeslot        TIME NOT NULL PRIMARY KEY,
@@ -32,10 +34,11 @@ INSERT INTO schedule (timeslot, message_id) VALUES ('00:00:00', 0);
 INSERT INTO strings (id, message_id, mode, data) VALUES (1, 0, 'STANDARD_HOLD', 'Welcome to CSH!');";
 
 pub fn db_init(settings: &config::Config) ->Client{
-    let negotiator = NativeTls::new().unwrap();
+    let connector = TlsConnector::builder().build();
+    let connector = MakeTlsConnector::new(connector.expect("failed tls conenctor"));
     let mut con = Client::connect(
                 &settings.get_string("dbstring").unwrap(),
-                TlsMode::Require(&negotiator)
+                connector,
     ).unwrap();
 
     let mut init = true;

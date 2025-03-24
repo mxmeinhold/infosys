@@ -8,3 +8,4 @@ chrono = "0.4"
 config = "0.15"
 postgres = {version = "0.19", features = ["with-chrono-0_4"]}
 postgres-native-tls = "0.5.1"
+native-tls = "0.2.14"
