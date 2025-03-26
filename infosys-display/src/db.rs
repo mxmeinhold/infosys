@@ -34,7 +34,7 @@ INSERT INTO schedule (timeslot, message_id) VALUES ('00:00:00', 0);
 INSERT INTO strings (id, message_id, mode, data) VALUES (1, 0, 'STANDARD_HOLD', 'Welcome to CSH!');";
 
 pub fn db_init(settings: &config::Config) ->Client{
-    let connector = TlsConnector::builder().build();
+    let connector = TlsConnector::builder().danger_accept_invalid_certs(true).build();
     let connector = MakeTlsConnector::new(connector.expect("failed tls conenctor"));
     let mut con = Client::connect(
                 &settings.get_string("dbstring").unwrap(),

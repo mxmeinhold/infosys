@@ -1,6 +1,6 @@
 extern crate chrono;
 
-use bb::*;
+use crate::bb::*;
 
 use self::chrono::NaiveTime;
 use self::chrono::Timelike;

@@ -2,7 +2,8 @@
 name = "infosys-display"
 version = "0.1.0"
 authors = ["Liam Middlebrook <liammiddlebrook@gmail.com>"]
-
+edition = '2024'
+ 
 [dependencies]
 chrono = "0.4"
 config = "0.15"
