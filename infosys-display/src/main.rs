@@ -26,6 +26,8 @@ fn main() {
     let now = get_naivetime_now();
 
     let mut sign_input: Vec<(Vec<u8>, Vec<u8>)> = Vec::new();
+    let tour_mode : bool = true;
+
 
     // Get the most recent message to present
     for row in &con.query("SELECT message_id FROM schedule
@@ -36,8 +38,25 @@ fn main() {
         let rowid: i32 = row.get(0);
         let result: Vec<(String, String)> = retrieve_strings_for_message_id(&mut con, rowid);
         println!("Message Id: {}, Contents:{:?}", rowid, result);
-        for res in result {
-            sign_input.push(tuple_to_bytestring(res));
+        //println!("Print result pls {:?}", result);
+        if tour_mode == true { 
+            let tour = String::from("MODE_STANDARD_ROLL_LEFT");
+            let tour2 = String::from("Welcome to CSH!");
+            let tour3 = String::from("SPECIAL_CHERRY_BOMB");
+            let tour4 = String::from("Est. 1976");
+            sign_input.push(tuple_to_bytestring((tour, tour2) ));
+            sign_input.push(tuple_to_bytestring((tour3, tour4))); 
+            tour = String::from("random");
+            tour2 = String::from("Welcome to CSH!");
+            tour3 = String::from("MODE_SPECIAL_FIREWORKS");
+            tour4 = String::from("Est. 1976");
+            sign_input.push(tuple_to_bytestring((tour, tour2) ));
+            sign_input.push(tuple_to_bytestring((tour3, tour4))); 
+        } else {
+            for res in result {
+                sign_input.push(tuple_to_bytestring(res));
+            
+            }
         }
     }
 
