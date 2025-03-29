@@ -1,5 +1,0 @@
-target/
-**/*.rs.bk
-settings.toml
-postgres.pem
-todo.txt
