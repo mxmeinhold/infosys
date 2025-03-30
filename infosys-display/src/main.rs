@@ -26,7 +26,7 @@ fn main() {
     let now = get_naivetime_now();
 
     let mut sign_input: Vec<(Vec<u8>, Vec<u8>)> = Vec::new();
-    let tour_mode : bool = true;
+    let tour_mode : bool = false;
 
 
     // Get the most recent message to present
@@ -46,12 +46,12 @@ fn main() {
             let tour4 = String::from("Est. 1976");
             sign_input.push(tuple_to_bytestring((tour, tour2) ));
             sign_input.push(tuple_to_bytestring((tour3, tour4))); 
-            tour = String::from("random");
-            tour2 = String::from("Welcome to CSH!");
-            tour3 = String::from("MODE_SPECIAL_FIREWORKS");
-            tour4 = String::from("Est. 1976");
-            sign_input.push(tuple_to_bytestring((tour, tour2) ));
-            sign_input.push(tuple_to_bytestring((tour3, tour4))); 
+            let tour5 = String::from("random");
+            let tour6 = String::from("Welcome to CSH!");
+            let tour7 = String::from("MODE_SPECIAL_FIREWORKS");
+            let tour8 = String::from("Est. 1976");
+            sign_input.push(tuple_to_bytestring((tour5, tour6) ));
+            sign_input.push(tuple_to_bytestring((tour7, tour8))); 
         } else {
             for res in result {
                 sign_input.push(tuple_to_bytestring(res));
