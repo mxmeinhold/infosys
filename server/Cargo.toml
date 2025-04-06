@@ -1,0 +1,12 @@
+[package]
+name = "server"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+axum = "0.8.3"
+chrono = "0.4.40"
+cron_tab = { version = "0.2.8", features = ["sync", "async"] }
+reqwest = { version = "0.12.15", features = ["blocking", "json"] }
+tokio = { version = "1", features = ["full"] }
+
