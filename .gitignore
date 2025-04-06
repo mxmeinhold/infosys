@@ -1,3 +1,5 @@
 target/
 server/target
 infosys-display/target
+infosys-display/settings
+temp.txt

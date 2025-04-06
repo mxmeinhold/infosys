@@ -1,3 +1,5 @@
+use infosys_display::{tour_mode, grab_from_db};
+
 use axum::{
     routing::get,
     Router,
@@ -7,6 +9,9 @@ use chrono::{FixedOffset, Local, TimeZone};
 use cron_tab::AsyncCron;
 use tokio::sync::Mutex;
 use cron_tab::CronError;
+use std::env;
+
+
 //fn main() {
 //    let app = Router::<()>::new()
 //        .without_v07_checks()
@@ -14,15 +19,20 @@ use cron_tab::CronError;
 //        .route("/*asterisk", get(|| async {}));
 //}
 
+// sec   min   hour   day of month   month   day of week   year
+// *     *     *      *              *       *             *
+
 
 #[tokio::main]
 async fn main() -> Result<(), CronError>{
     let local_tz = Local::from_offset(&FixedOffset::west_opt(5).unwrap());
     let mut cron = AsyncCron::new(local_tz);
+    let path = env::current_dir();
+    println!("the Current directory is {}", path.expect("REASON").display());
+
+    cron.add_fn("* * * * * * *", move || tour_mode()).await;
+    //cron.add_fn("* 1 * * * * *", move || grab_from_db());
     
-
-    cron.add_fn("* * * * * * *", print_now).await.unwrap();
-
     cron.start().await;
 
     let counter = Arc::new(Mutex::new(1));
@@ -44,7 +54,7 @@ async fn main() -> Result<(), CronError>{
     cron.stop().await;
     Ok(())
 }
-
+// hellow
 async fn print_now() {
     println!("now: {}", Local::now().to_string());
 }
