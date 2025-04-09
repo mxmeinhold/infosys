@@ -38,32 +38,41 @@ async fn main() -> Result<(), CronError>{
     cron.start().await;
 
     let cron = Arc::new(Mutex::new(cron));
-
-    // Routes ---------------------------------
-    let app = Router::<()>::new()
-        .without_v07_checks()
-        .route("/api/insert", post(|| async {}))
-        .route("/tour", get(|| async {
+/*
+|| async {
             let cr = cron.lock().unwrap();
             cr.remove(db_mode.clone());
             match cr.add_fn("* 1 * * * * *", move || infosys_display::tour_mode()).await {
                 Ok(mode) => db_mode = mode,
                 Err(e) => eprintln!("Failed to add to cron {e}")
             };
-        }))
-//----------------------------------------------
-        .route("/db", get(|| async {
-            let cr = cron.lock().unwrap();
+        }
+let cr = cron.lock().unwrap();
             cr.remove(tour_mode);
             match cr.add_fn("* 1 * * * * *", move || grab_from_db()).await {
                 Ok(mode) => db_mode = mode,
                 Err(e) => eprintln!("Failed to add to cron: {e}"),
             };
+*/
+    // Routes ---------------------------------
+    let app = Router::<()>::new()
+        .without_v07_checks()
+        .route("/api/insert", post(|| async {}))
+        .route("/tour",get(|| async {
+            
         }))
 //----------------------------------------------
-        .route("/stop", get(|| async {
-            cron.lock().unwrap().stop().await;
-        }));
+        .route("/db", get({
+            //let cron = cron.clone();
+            //|| function(cron)
+            
+        }))
+//----------------------------------------------
+        .route("/stop", get({
+            let cron = cron.clone();
+            move || async { 
+                cron.lock().unwrap().stop().await
+        }}));
 //---------------------------------------------
 
 //    let counter = Arc::new(Mutex::new(1));
