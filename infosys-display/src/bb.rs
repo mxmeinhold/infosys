@@ -4,9 +4,10 @@
 #![allow(dead_code)]
 
 // Constants
-pub static START_PACKET: &'static [u8] = &[0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x5A, 0x30, 0x30];
+pub static START_PACKET: &'static [u8] = &[
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x5A, 0x30, 0x30,
+];
 pub static END_PACKET: &'static [u8] = &[0x04, 0x0a];
-
 
 // ===== SPECIAL MODES =====
 pub static SPECIAL_SPEAKER_ON: &'static [u8] = &[0x21, 0x30, 0x30];
@@ -73,7 +74,6 @@ pub static MODE_SPECIAL_RUNNING_ANIMAL_OR_FISH: &'static [u8] = &[0x6E, 0x57];
 pub static MODE_SPECIAL_FIREWORKS: &'static [u8] = &[0x6E, 0x58];
 pub static MODE_SPECIAL_BALLOON_ANIMATION: &'static [u8] = &[0x6E, 0x59];
 pub static MODE_SPECIAL_CHERRY_BOMB: &'static [u8] = &[0x6E, 0x5A];
-
 
 // Special Characters
 pub static DISPLAY_SPECIAL_CAP_C_CEDILLA: &'static [u8] = &[0x08, 0x20];
@@ -160,7 +160,6 @@ pub static DISPLAY_SPECIAL_MUG: &'static [u8] = &[0x08, 0x70];
 pub static DISPLAY_SPECIAL_SATELLITE: &'static [u8] = &[0x08, 0x71];
 pub static DISPLAY_SPECIAL_COPYRIGHT: &'static [u8] = &[0x08, 0x72];
 
-
 // The following symbols don't seem to work on our BetaBrite sign
 pub static DISPLAY_SPECIAL_MALE: &'static [u8] = &[0x08, 0x73];
 pub static DISPLAY_SPECIAL_FEMALE: &'static [u8] = &[0x08, 0x74];
@@ -183,7 +182,6 @@ pub static SHOW_SMALL_DOTS_31: &'static [u8] = &[0x14, 0x43];
 pub static SHOW_TIME: &'static [u8] = &[0x13];
 pub static NEW_PAGE: &'static [u8] = &[0x0C];
 pub static NEW_LINE: &'static [u8] = &[0x0D];
-
 
 // Functions
 // preprogrammed write special

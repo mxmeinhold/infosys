@@ -1656,6 +1656,7 @@ dependencies = [
  "cron_tab",
  "infosys-display",
  "reqwest",
+ "serde",
  "tokio",
 ]
 

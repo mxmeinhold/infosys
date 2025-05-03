@@ -8,16 +8,12 @@ use self::chrono::Timelike;
 pub fn get_naivetime_now() -> NaiveTime {
     let curtime = chrono::prelude::Local::now();
 
-    return NaiveTime::from_hms_opt(
-        curtime.hour(),
-        curtime.minute(),
-        curtime.second()).expect("have a real time");
+    return NaiveTime::from_hms_opt(curtime.hour(), curtime.minute(), curtime.second())
+        .expect("have a real time");
 }
 
-
 // Parser for Input Strings into BB strings
-#[derive(PartialEq)]
-#[derive(Debug)]
+#[derive(PartialEq, Debug)]
 enum ParserState {
     Normal,
     EscapeCatch,
@@ -146,7 +142,7 @@ fn parse_string_to_infosys_blob(input: &str) -> Vec<u8> {
 
 fn split_octet_to_u8(inn: &String) -> Vec<u8> {
     let mut out_vec: Vec<u8> = Vec::new();
-    let mut input: String =inn.clone();
+    let mut input: String = inn.clone();
     while input.len() > 0 {
         let mut p1: u8 = (input.remove(0) as u8) - 48;
         let mut p2: u8 = (input.remove(0) as u8) - 48;
@@ -156,7 +152,7 @@ fn split_octet_to_u8(inn: &String) -> Vec<u8> {
         if p2 > 9 {
             p2 -= 7;
         }
-        let total: u8 = p1* 16 + p2;
+        let total: u8 = p1 * 16 + p2;
         out_vec.push(total);
     }
     return out_vec;

@@ -1,10 +1,10 @@
 extern crate config;
+extern crate native_tls;
 extern crate postgres;
 extern crate postgres_native_tls;
-extern crate native_tls;
 
+use self::native_tls::TlsConnector;
 use self::postgres::Client;
-use self::native_tls::{TlsConnector};
 use self::postgres_native_tls::MakeTlsConnector;
 
 static SQL_CREATE_SCHEDULE: &'static str = "CREATE TABLE schedule (
@@ -33,13 +33,12 @@ INSERT INTO schedule (timeslot, message_id) VALUES ('00:00:00', 0);
 
 INSERT INTO strings (id, message_id, mode, data) VALUES (1, 0, 'STANDARD_HOLD', 'Welcome to CSH!');";
 
-pub fn db_init(settings: &config::Config) ->Client{
-    let connector = TlsConnector::builder().danger_accept_invalid_certs(true).build();
+pub fn db_init(settings: &config::Config) -> Client {
+    let connector = TlsConnector::builder()
+        .danger_accept_invalid_certs(true)
+        .build();
     let connector = MakeTlsConnector::new(connector.expect("failed tls conenctor"));
-    let mut con = Client::connect(
-                &settings.get_string("dbstring").unwrap(),
-                connector,
-    ).unwrap();
+    let mut con = Client::connect(&settings.get_string("dbstring").unwrap(), connector).unwrap();
 
     let mut init = true;
     init = init && check_or_create_db(&mut con, "messages", SQL_CREATE_MESSAGE);
@@ -54,10 +53,14 @@ pub fn db_init(settings: &config::Config) ->Client{
 }
 
 fn check_or_create_db(con: &mut Client, name: &str, sql: &str) -> bool {
-
-    let exists: bool = con.execute("SELECT 1::integer FROM pg_tables
+    let exists: bool = con
+        .execute(
+            "SELECT 1::integer FROM pg_tables
             WHERE schemaname = 'public' AND tablename = $1::text;",
-            &[&name]).unwrap() != 0;
+            &[&name],
+        )
+        .unwrap()
+        != 0;
 
     // Create the table!
     if !exists {
@@ -70,12 +73,14 @@ fn check_or_create_db(con: &mut Client, name: &str, sql: &str) -> bool {
 
 // TODO move this into a single request utilizing the schedule and foreign keys
 pub fn retrieve_strings_for_message_id(con: &mut Client, id: i32) -> Vec<(String, String)> {
-
     let mut str_list: Vec<(String, String)> = Vec::new();
 
-    for string in &con.query(
-        "SELECT id, message_id, data, mode FROM strings where message_id = $1",
-        &[&id]).unwrap()
+    for string in &con
+        .query(
+            "SELECT id, message_id, data, mode FROM strings where message_id = $1",
+            &[&id],
+        )
+        .unwrap()
     {
         let data: String = string.get(2);
         let mode: String = string.get(3);
